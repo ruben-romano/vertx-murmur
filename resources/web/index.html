@@ -1,58 +1,105 @@
 <html>
 	<head>
-
+		
+		<link href="scripts/semantic-ui/css/semantic.css" rel="stylesheet" type="text/css"></link>
+		<link href="styles/murmur.css" rel="stylesheet" type="text/css"></link>		
+		
 		<script src="scripts/sockjs.min.js"></script>
-		<script src='scripts/vertxbus.js'></script>
+		<script src="scripts/vertxbus.js"></script>
+		<script src="scripts/react.js"></script>
+		<script src="scripts/JSXTransformer.js"></script>
 		<script src="scripts/jquery-2.1.1.min.js"></script>
-
-		<script>
-			var eb = new vertx.EventBus('http://localhost/eventbus');
-		    	
-		   	eb.onopen = function() {
-		      eb.registerHandler('user.ruben', function(message) {
-		        var receiveTxt = $("#receiveTextArea");		        
-		        receiveTxt.val(message.message + "\n" + receiveTxt.val());
-		        console.log('received a message: ' + JSON.stringify(message));
-		      });
-		    }
-		</script>
+		<script src="scripts/jquery.cookie.js"></script>
+		<script src="scripts/semantic-ui/javascript/semantic.js"></script>
 
 	</head>
 	<body>
-		<h1>murmur</h1>
+		<div class="container">					
+			<div class="ui">
+				<div class="ui inverted segment site-header">
+					<i class="circular inverted black users icon">
+					</i>
+					<div class="ui icon input chat-input">
+					  <input type="text" placeholder="Chat..." id="chat-input" autofocus />
+					  <i class="comment icon"></i>
+					</div>
+					<div class="ui right floated huge header">murmur</div>	
+				</div>							
+			</div>	
+		</div>
 
-		<form>
-			<div>
-				<input type="text" id="message" size="40"/>
-				</br> 
-				<input type="text" id="toField" size="40"/> 
-				<button type="button" id="msgButton">Send</button></div>
-			<div>
-				<textarea id="sendTextArea" rows="10" cols="50"></textarea>
+		<div id="chat-box-content"></div>		
+
+		<!-- Login Modal -->
+		<div class="ui small modal">
+			<div class="ui one column middle aligned relaxed grid basic segment">
+			  <div class="column">
+			    <div class="ui center aligned form segment">
+			      <div class="ui header">
+			        <label class="ui large header">murmur</label>
+			        <div class="ui fluid left icon input">
+			          <input type="text" placeholder="Username" id="username-input">
+			          <i class="user icon"></i>
+			        </div>
+			      </div>
+			      <div class="ui black submit button" id="login-button">Login</div>
+			    </div>
+			  </div>
 			</div>
-			<div>
-				<textarea id="receiveTextArea" rows="10" cols="50"></textarea>
-			</div>
-		</form>
+		</div>
+		<script>
+			var loginButton = $("#login-button");
+			loginButton.click(function() {
+				eb = new vertx.EventBus('http://localhost/eventbus');
+				currentUser = $("#username-input").val();
+				// Setup publish queue to listen to message and user notification events
+				eb.onopen = function() {
+				  eb.registerHandler('user.' + currentUser, function(message) {
+				    var receiveTxt = $("#receiveTextArea");		        
+				    receiveTxt.val(message.message + "\n" + receiveTxt.val());
+				    data.unshift(message);
+				    updateChatList(data);
+				    console.log('received a message: ' + JSON.stringify(message));
+				  });
+				}
+
+				$('.small.modal')
+					.modal('hide');
+			}); 
+		</script>
+
+		<script src="scripts/murmur/components/test-data.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat-list.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat-box.js"></script>
 
 		<script>
-			$("#msgButton").click(function() {
-				var msg = $("#message").val();
-				var to = $("#toField").val();
-				var sendTxt = $("#sendTextArea");
-						
-				eb.send('persist-message', 
-					{ 
-						from : 'ruben', 
-						to : to,
-						message : msg
-					}, 
-					function(reply) {
-						sendTxt.val(reply.message + "\n" + sendTxt.val());
-						console.log('received a reply: ' + JSON.stringify(reply));
-					}
-				);
-			});
+			var updateChatList;
+		</script>
+
+		<script src="scripts/murmur/vertx-eventbus.js"></script>		
+		<script>		
+			var currentRecipient = 'fortune';
+			var chatInput = $('#chat-input');
+			chatInput.keypress(function(e) {
+			    if(e.which == 13) {			
+			    	var message = chatInput.val();    	
+			        chatInput.val("");
+							
+					eb.send('persist-message', 
+						{ 
+							from : currentUser, 
+							to : currentRecipient,
+							message : message
+						}, 
+						function(reply) {
+							data.unshift(reply);
+							updateChatList(data);
+							console.log('received a reply: ' + JSON.stringify(reply));
+						}
+					);
+			    }
+			});		
 		</script>
 
 	</body>

@@ -67,7 +67,7 @@ public class MessagePersistor extends Verticle {
 
 	private void persistMessage(JsonObject message) {
 		// add time stamp to message
-		message.putString("date-time", DateParser.now());
+		message.putString("datetime", DateParser.now());
 
 		JsonObject saveToMongo = new JsonObject();
 		saveToMongo.putString("action", "save");
@@ -77,6 +77,7 @@ public class MessagePersistor extends Verticle {
 		eb.send(MONGO_PERSISTOR_ADDRESS, saveToMongo, new Handler<Message<JsonObject>>() {
 	        public void handle(Message<JsonObject> reply) {
 	        	System.out.println("PERSIST MESSAGE: " + reply.body());
+	        	message.putString("key", reply.body().getString("_id"));
 	        	forwardMessage(message);
 	        }
 	    });
@@ -84,7 +85,7 @@ public class MessagePersistor extends Verticle {
 
 	private void persistUser(JsonObject message) {
 		// add time stamp to message
-		message.putString("date-time", DateParser.now());
+		message.putString("datetime", DateParser.now());
 
 		JsonObject saveToMongo = new JsonObject();
 		saveToMongo.putString("action", "save");

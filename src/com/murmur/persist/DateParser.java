@@ -102,9 +102,9 @@ public class DateParser {
 
     public static String toString( Date date ) {
 
-        SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssz" );
+        SimpleDateFormat df = new SimpleDateFormat( "MMMM d, yyyy h:mm:ss a" );
 
-        TimeZone tz = TimeZone.getTimeZone( "UTC" );
+        TimeZone tz = TimeZone.getTimeZone( "CST" );
         
         df.setTimeZone( tz );        
 
