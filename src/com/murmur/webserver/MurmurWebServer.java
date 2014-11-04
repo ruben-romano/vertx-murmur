@@ -34,8 +34,8 @@ public class MurmurWebServer extends Verticle {
 		JsonArray outboundAddresses = new JsonArray();
 		outboundAddresses.addObject(new JsonObject().putString("address", "persist-message"));
 		outboundAddresses.addObject(new JsonObject().putString("address", "persist-user"));
-		outboundAddresses.addObject(new JsonObject().putString("address", "murmur-find-messages"));
-		outboundAddresses.addObject(new JsonObject().putString("address", "murmur-find-users"));
+		outboundAddresses.addObject(new JsonObject().putString("address", "find-messages"));
+		outboundAddresses.addObject(new JsonObject().putString("address", "find-users"));
 
 		JsonArray inboundAddresses = new JsonArray();	
 		inboundAddresses.addObject(new JsonObject().putString("address", "user.status.notification"));

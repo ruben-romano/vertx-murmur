@@ -4,12 +4,12 @@
 		<link href="scripts/semantic-ui/css/semantic.css" rel="stylesheet" type="text/css"></link>
 		<link href="styles/murmur.css" rel="stylesheet" type="text/css"></link>		
 		
-		<script src="scripts/sockjs.min.js"></script>
-		<script src="scripts/vertxbus.js"></script>
-		<script src="scripts/react.js"></script>
-		<script src="scripts/JSXTransformer.js"></script>
-		<script src="scripts/jquery-2.1.1.min.js"></script>
-		<script src="scripts/jquery.cookie.js"></script>
+		<script src="scripts/lib/sockjs.min.js"></script>
+		<script src="scripts/lib/vertxbus.js"></script>
+		<script src="scripts/lib/react.js"></script>
+		<script src="scripts/lib/JSXTransformer.js"></script>
+		<script src="scripts/lib/jquery-2.1.1.min.js"></script>
+		<script src="scripts/lib/jquery.cookie.js"></script>
 		<script src="scripts/semantic-ui/javascript/semantic.js"></script>
 
 	</head>
@@ -27,6 +27,11 @@
 				</div>							
 			</div>	
 		</div>
+
+		<script type="text/jsx" src="scripts/murmur/vertx-eventbus.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat-list.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat-box.js"></script>
 
 		<div id="chat-box-content"></div>		
 
@@ -51,9 +56,9 @@
 			var loginButton = $("#login-button");
 			loginButton.click(function() {
 				eb = new vertx.EventBus('http://localhost/eventbus');
-				currentUser = $("#username-input").val();
-				// Setup publish queue to listen to message and user notification events
+				currentUser = $("#username-input").val();				
 				eb.onopen = function() {
+				  // Setup publish queue to listen to message and user notification events	
 				  eb.registerHandler('user.' + currentUser, function(message) {
 				    var receiveTxt = $("#receiveTextArea");		        
 				    receiveTxt.val(message.message + "\n" + receiveTxt.val());
@@ -61,31 +66,42 @@
 				    updateChatList(data);
 				    console.log('received a message: ' + JSON.stringify(message));
 				  });
+
+				  // retrieve list of messages for the current user
+			  	  eb.send('find-messages',
+					{ user: currentUser },
+					function(reply) {
+						console.log('messages received: ' + JSON.stringify(reply));
+						messageStore = reply;
+						chatlist = messageStore[currentRecipient];
+						if (typeof chatlist == 'undefined') {
+							return;
+						}
+						data.pop();
+						for (var i=0; i < chatlist.length; i++) {
+							data.push(chatlist[i]);
+						}
+						updateChatList(data);						
+					}
+				  );
 				}
 
 				$('.small.modal')
 					.modal('hide');
 			}); 
 		</script>
-
-		<script src="scripts/murmur/components/test-data.js"></script>
-		<script type="text/jsx" src="scripts/murmur/components/chat.js"></script>
-		<script type="text/jsx" src="scripts/murmur/components/chat-list.js"></script>
-		<script type="text/jsx" src="scripts/murmur/components/chat-box.js"></script>
-
-		<script>
-			var updateChatList;
-		</script>
-
-		<script src="scripts/murmur/vertx-eventbus.js"></script>		
+		
 		<script>		
-			var currentRecipient = 'fortune';
 			var chatInput = $('#chat-input');
 			chatInput.keypress(function(e) {
 			    if(e.which == 13) {			
 			    	var message = chatInput.val();    	
 			        chatInput.val("");
-							
+					
+					if (message.trim() == "") {
+						return;
+					}		
+
 					eb.send('persist-message', 
 						{ 
 							from : currentUser, 
