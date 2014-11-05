@@ -25,7 +25,6 @@ public class RestGatewayServer extends Verticle {
 		SERVICES_MAP = Collections.unmodifiableMap(servicesMap);
 	}
 
-	private final String EB_RECEIVE_ADDRESS = "send-message";
 	private final String EB_SEND_ADDRESS = "persist-message";
 
 	public void start() {

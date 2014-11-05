@@ -1,4 +1,4 @@
-var UserRepo = (function() {
+var UserRepo = (function(eb, global) {
 	var repo = {};
 	repo.userList = [
 		{icon:"flag", name:"magic eight ball"}, 
@@ -42,4 +42,4 @@ var UserRepo = (function() {
 	};		
 
 	return repo;
-}());
+}(EventBus, Global));

@@ -11,16 +11,27 @@ $('#user-modal')
 	.modal('hide');
 
 ////////////////////
-// login button 
+// login modal 
 ////////////////////
 
 var loginButton = $("#login-button");
-loginButton.click(function() {
-	Global.currentUser = $("#username-input").val();
+var usernameInput = $("#username-input");
+var loginUser = function() {
+	Global.currentUser = usernameInput.val();
 	MessageRepo.loadMessages();				
 	$('#login-modal')
 		.modal('hide');
 	highlightUserButton();
+}
+
+usernameInput.keypress(function(e) {
+	if(e.which == 13) {	
+		loginUser();
+	}
+});
+
+loginButton.click(function() {
+	loginUser();
 }); 
 
 ////////////////////
@@ -42,6 +53,7 @@ chatInput.keypress(function(e) {
 ////////////////////
 // chat box
 ////////////////////
+
 var bounceChatBox = function() {
 	$('#chat-box-content') 
 		.transition('bounce');

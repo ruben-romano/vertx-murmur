@@ -57,11 +57,14 @@ body {
 }
 
 #login-header {
-	letter-spacing: 3px;
+	font-size: 60px;
+	letter-spacing: 2px;
+	color: #6ECFF5;
 }
 
 #login-button {
 	width: 265;
+	margin-bottom: 25px
 }
 
 #user-button {

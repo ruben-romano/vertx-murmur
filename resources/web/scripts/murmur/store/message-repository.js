@@ -41,6 +41,7 @@ var MessageRepo = (function(eb, global) {
 	 	eb.sendMsg('find-messages', { user: global.currentUser },
 			function(reply) {
 				_userChatList = reply;		
+				console.log(JSON.stringify(reply));
 				handleMessage();	
 			}
 		);
