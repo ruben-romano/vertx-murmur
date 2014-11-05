@@ -2,7 +2,7 @@ var MessageRepo = (function(eb, global) {
 	var repo = {};
 
 	var _userChatList = {};	
-	repo.chatList = [];
+	repo.chatList = [{from: 'murmur', to: 'ruben', datetime:'now', message: 'Select a user to murmur ...'}];
 
 	var addMessage = function(message) {
 		var userKey = message.from == global.currentUser ? message.to : message.from;
@@ -14,6 +14,7 @@ var MessageRepo = (function(eb, global) {
 		if (userKey == global.currentRecipient) { 
 			repo.chatList.unshift(message);
 	    	repo.updateChatList(repo.chatList);
+	    	bounceChatBox();
 		}
 	}
 
@@ -39,21 +40,24 @@ var MessageRepo = (function(eb, global) {
 		// retrieve list of messages for the current user
 	 	eb.sendMsg('find-messages', { user: global.currentUser },
 			function(reply) {
-				_userChatList = reply;	
-				handleMessage();
-
-				// !!!! should be set off of user selection not initial load message
-				repo.setChatList();			
-
+				_userChatList = reply;		
+				handleMessage();	
 			}
 		);
 	};	
 
 	repo.setChatList = function() {
+		//empty chat list
+		while(repo.chatList.length > 0) {
+			repo.chatList.pop();
+		}
+		repo.updateChatList(repo.chatList);
+
 		var list = _userChatList[global.currentRecipient];
 		if (typeof list == 'undefined') {
 			return;
 		}
+
 		for (var i=0; i<list.length; i++) {
 			repo.chatList.push(list[i]);
 		}

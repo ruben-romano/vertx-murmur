@@ -8,16 +8,26 @@ var ChatBox = React.createClass({
   },
 
   render: function() {
+    var chatbox;
+    if (MessageRepo.chatList.length > 0) {
+      chatbox =
+          <div className="chatBox chat-box">
+            <div className="ui one column grid">
+              <div className="row">
+                <div className="column">
+                  <ChatList data={this.props.data} />
+                </div>
+              </div>
+            </div>
+          </div>;
+    } else {
+      chatbox = <div></div>;
+    }
+
     return (
-		<div className="chatBox chat-box">
-			<div className="ui one column grid">
-				<div className="row">
-					<div className="column">
-						<ChatList data={this.props.data} />
-					</div>
-				</div>
-			</div>
-		</div>
+      <div>
+          {chatbox}
+      </div>
     );
   }
 });

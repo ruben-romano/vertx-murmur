@@ -15,10 +15,6 @@
 
 }
 
-.chat-input {
-	margin: 5px 5px 5px 5px;
-}
-
 h1, h2, h3, h4, h5 {
 	font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Arial", 
 	sans-serif/*rtl:prepend:"Droid Arabic Kufi","Droid Sans", */;
@@ -42,4 +38,44 @@ body {
 	margin-right: 30px;
 	margin-bottom: 30px;
 	opacity: .75;
+}
+
+#title-container {
+	padding: 0px;
+	margin: 0px;
+}
+
+#title-head {
+	padding: 0px;
+	color: #6ECFF5;
+	font-size: 40px;
+	margin-right: 30px;
+}
+
+#login-modal {
+	max-width: 300px;
+}
+
+#login-header {
+	letter-spacing: 3px;
+}
+
+#login-button {
+	width: 265;
+}
+
+#user-button {
+	margin-left: 20px;
+}
+
+#user-modal {
+	max-width: 325px;
+}
+
+.chat-input {
+	margin-left: 20px;
+}
+
+.user-button-container {
+	width: 100px;
 }

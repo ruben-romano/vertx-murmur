@@ -14,26 +14,35 @@
 		<script type="text/jsx" src="scripts/murmur/store/event-bus.js"></script>
 		<script type="text/jsx" src="scripts/murmur/store/global.js"></script>		
 		<script type="text/jsx" src="scripts/murmur/store/message-repository.js"></script>
-
+		<script type="text/jsx" src="scripts/murmur/store/user-repository.js"></script>
 		<script type="text/jsx" src="scripts/murmur/components/chat.js"></script>
 		<script type="text/jsx" src="scripts/murmur/components/chat-list.js"></script>
 		<script type="text/jsx" src="scripts/murmur/components/chat-box.js"></script>
-
+		<script type="text/jsx" src="scripts/murmur/components/user.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/user-list.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/user-box.js"></script>
+		
 	</head>
 	<body>
 		<!-- Main Header -->
 		<div class="container">					
-			<div class="ui">
-				<div class="ui inverted segment site-header">
-					<i class="circular inverted black users icon link icon" id="user-button">
-					</i>
-					<div class="ui icon input chat-input">
-					  <input type="text" placeholder="Chat..." id="chat-input" autofocus />
-					  <i class="comment icon"></i>
+			<div class="ui inverted segment site-header">
+				<div class="ui text menu">
+					<div class="active item">
+						<i class="circular inverted black users icon link icon" id="user-button">
+						</i>
 					</div>
-					<div class="ui right floated huge header">murmur</div>	
-				</div>							
-			</div>	
+					<div class="ui icon input active item">
+					  <input type="text" placeholder="Chat..." autofocus id="chat-input"/>
+					  <i class="comment blue icon"></i>
+					</div>					
+					<div class="ui text right menu" id="title-container">
+						<div class="active item" id="title-head">
+							murmur
+						</div>	
+					</div>
+				</div>
+			</div>							
 		</div>
 
 		<div id="chat-box-content"></div>		
@@ -44,7 +53,7 @@
 			  <div class="column">
 			    <div class="ui center aligned form segment">
 			      <div class="ui header">
-			        <label class="ui large header">murmur</label>
+			        <label class="ui large header" id="login-header">murmur</label>
 			        <div class="ui fluid left icon input">
 			          <input type="text" placeholder="Username" id="username-input">
 			          <i class="user icon"></i>
@@ -57,44 +66,11 @@
 		</div>
 
 		<!-- User Select Modal -->
+		<div class="ui small modal" id="user-modal">
+			<div id="user-box-content"></div>
+		</div>
 
-
-		<script>
-
-			$('#login-modal')
-			  .modal('setting', 'closable', false)
-			  .modal('show');
-
-			$('#user-modal') 
-				.modal('setting', 'closable', true)
-				.modal('hide');
-
-			var loginButton = $("#login-button");
-			loginButton.click(function() {
-				Global.currentUser = $("#username-input").val();
-				MessageRepo.loadMessages();				
-				$('#login-modal')
-					.modal('hide');
-			}); 
-	
-			var chatInput = $('#chat-input');
-			chatInput.keypress(function(e) {
-			    if(e.which == 13) {			
-			    	var message = chatInput.val();    	
-			        chatInput.val("");					
-					if (message.trim() == "") {
-						return;
-					}		
-					MessageRepo.sendMessage(message);
-			    }
-			});		
-
-			var userButton = $('#user-button');
-			userButton.click(function() {
-				alert('hello');
-			});
-
-		</script>
+		<script src="scripts/murmur/ui/dom-events.js"></script>
 
 	</body>
 </html>
