@@ -56,7 +56,7 @@ public class RestGatewayServer extends Verticle {
 
 		// register event message receiver to listen for each service
 		for (Map.Entry<String, String> entry : SERVICES_MAP.entrySet()) {		
-			String serviceAddress = "user." + entry.getKey();
+			String serviceAddress = "msg." + entry.getKey();
 			eb.registerHandler(serviceAddress, handler);
 		}
 	}

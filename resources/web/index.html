@@ -9,15 +9,23 @@
 		<script src="scripts/lib/react.js"></script>
 		<script src="scripts/lib/JSXTransformer.js"></script>
 		<script src="scripts/lib/jquery-2.1.1.min.js"></script>
-		<script src="scripts/lib/jquery.cookie.js"></script>
 		<script src="scripts/semantic-ui/javascript/semantic.js"></script>
+
+		<script type="text/jsx" src="scripts/murmur/store/event-bus.js"></script>
+		<script type="text/jsx" src="scripts/murmur/store/global.js"></script>		
+		<script type="text/jsx" src="scripts/murmur/store/message-repository.js"></script>
+
+		<script type="text/jsx" src="scripts/murmur/components/chat.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat-list.js"></script>
+		<script type="text/jsx" src="scripts/murmur/components/chat-box.js"></script>
 
 	</head>
 	<body>
+		<!-- Main Header -->
 		<div class="container">					
 			<div class="ui">
 				<div class="ui inverted segment site-header">
-					<i class="circular inverted black users icon">
+					<i class="circular inverted black users icon link icon" id="user-button">
 					</i>
 					<div class="ui icon input chat-input">
 					  <input type="text" placeholder="Chat..." id="chat-input" autofocus />
@@ -28,15 +36,10 @@
 			</div>	
 		</div>
 
-		<script type="text/jsx" src="scripts/murmur/vertx-eventbus.js"></script>
-		<script type="text/jsx" src="scripts/murmur/components/chat.js"></script>
-		<script type="text/jsx" src="scripts/murmur/components/chat-list.js"></script>
-		<script type="text/jsx" src="scripts/murmur/components/chat-box.js"></script>
-
 		<div id="chat-box-content"></div>		
 
 		<!-- Login Modal -->
-		<div class="ui small modal">
+		<div class="ui small modal" id="login-modal">
 			<div class="ui one column middle aligned relaxed grid basic segment">
 			  <div class="column">
 			    <div class="ui center aligned form segment">
@@ -52,70 +55,45 @@
 			  </div>
 			</div>
 		</div>
+
+		<!-- User Select Modal -->
+
+
 		<script>
+
+			$('#login-modal')
+			  .modal('setting', 'closable', false)
+			  .modal('show');
+
+			$('#user-modal') 
+				.modal('setting', 'closable', true)
+				.modal('hide');
+
 			var loginButton = $("#login-button");
 			loginButton.click(function() {
-				eb = new vertx.EventBus('http://localhost/eventbus');
-				currentUser = $("#username-input").val();				
-				eb.onopen = function() {
-				  // Setup publish queue to listen to message and user notification events	
-				  eb.registerHandler('user.' + currentUser, function(message) {
-				    var receiveTxt = $("#receiveTextArea");		        
-				    receiveTxt.val(message.message + "\n" + receiveTxt.val());
-				    data.unshift(message);
-				    updateChatList(data);
-				    console.log('received a message: ' + JSON.stringify(message));
-				  });
-
-				  // retrieve list of messages for the current user
-			  	  eb.send('find-messages',
-					{ user: currentUser },
-					function(reply) {
-						console.log('messages received: ' + JSON.stringify(reply));
-						messageStore = reply;
-						chatlist = messageStore[currentRecipient];
-						if (typeof chatlist == 'undefined') {
-							return;
-						}
-						data.pop();
-						for (var i=0; i < chatlist.length; i++) {
-							data.push(chatlist[i]);
-						}
-						updateChatList(data);						
-					}
-				  );
-				}
-
-				$('.small.modal')
+				Global.currentUser = $("#username-input").val();
+				MessageRepo.loadMessages();				
+				$('#login-modal')
 					.modal('hide');
 			}); 
-		</script>
-		
-		<script>		
+	
 			var chatInput = $('#chat-input');
 			chatInput.keypress(function(e) {
 			    if(e.which == 13) {			
 			    	var message = chatInput.val();    	
-			        chatInput.val("");
-					
+			        chatInput.val("");					
 					if (message.trim() == "") {
 						return;
 					}		
-
-					eb.send('persist-message', 
-						{ 
-							from : currentUser, 
-							to : currentRecipient,
-							message : message
-						}, 
-						function(reply) {
-							data.unshift(reply);
-							updateChatList(data);
-							console.log('received a reply: ' + JSON.stringify(reply));
-						}
-					);
+					MessageRepo.sendMessage(message);
 			    }
 			});		
+
+			var userButton = $('#user-button');
+			userButton.click(function() {
+				alert('hello');
+			});
+
 		</script>
 
 	</body>

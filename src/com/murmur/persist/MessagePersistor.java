@@ -161,7 +161,7 @@ public class MessagePersistor extends Verticle {
 
 	private void forwardMessage(JsonObject message) {
 		// send both to sender and recipient
-		String forwardAddress = "user." + message.getString("to").replaceAll(" " , "-");
+		String forwardAddress = "msg." + message.getString("to").replaceAll(" " , "-");
 		eb.publish(forwardAddress, message);	 
 		System.out.println("Sent to: " + forwardAddress);
 	}

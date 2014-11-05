@@ -40,6 +40,7 @@ public class MurmurWebServer extends Verticle {
 		JsonArray inboundAddresses = new JsonArray();	
 		inboundAddresses.addObject(new JsonObject().putString("address", "user.status.notification"));
 		inboundAddresses.addObject(new JsonObject().putString("address_re", "user\\..+"));
+		inboundAddresses.addObject(new JsonObject().putString("address_re", "msg\\..+"));
 
 		SockJSServer sockJSServer = vertx.createSockJSServer(httpServer);
 		sockJSServer.bridge(config, outboundAddresses, inboundAddresses);

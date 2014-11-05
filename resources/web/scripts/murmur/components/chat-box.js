@@ -1,11 +1,10 @@
-// tutorial1.js
 var ChatBox = React.createClass({
   getInitialState: function() {
-    updateChatList = function(data) {
+    MessageRepo.updateChatList = function(data) {
       this.setState(data);
     }.bind(this);
 
-    return {data: data};
+    return {data: MessageRepo.chatList};
   },
 
   render: function() {
@@ -24,6 +23,6 @@ var ChatBox = React.createClass({
 });
 
 React.render(
-  <ChatBox data={data}/>,
+  <ChatBox data={MessageRepo.chatList}/>,
   	document.getElementById('chat-box-content')
 );
