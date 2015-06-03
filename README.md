@@ -21,3 +21,8 @@ dd6cad81d21d        jansolo/vertx:latest        /usr/local/bin/vertx   40 hours 
 f29568af51bf        jansolo/vertx:latest        /usr/local/bin/vertx   42 hours ago        Up 7 hours                                                               murmur.persist      
 b22456481b9d        dockerfile/mongodb:latest   mongod --rest --http   2 days ago          Up 2 days           0.0.0.0:27017->27017/tcp, 0.0.0.0:28017->28017/tcp   mongodb             
 rromano@ubuntu:~/World/git/vertx-murmur$ 
+
+
+
+This is a test
+
